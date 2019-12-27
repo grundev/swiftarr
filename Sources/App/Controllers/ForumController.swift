@@ -2010,6 +2010,9 @@ extension ForumController: ContentFilterable {}
 
 // posts can contain images
 extension ForumController: ImageHandler {
+    
+    // MARK: ImageHandler Conformance
+    
     /// The base directory for storing ForumPost images.
     var imageDir: String {
         return "images/forum/"
@@ -2023,6 +2026,9 @@ extension ForumController: ImageHandler {
 
 // posts can be bookmarked
 extension ForumController: UserBookmarkable {
+    
+    // MARK: UserBookmarkable Conformance
+    
     /// The barrel type for `ForumPost` bookmarking.
     var bookmarkBarrelType: BarrelType {
         return .bookmarkedPost

@@ -1501,6 +1501,9 @@ extension TwitarrController: ContentFilterable {}
 
 // twarrts can contain images
 extension TwitarrController: ImageHandler {
+    
+    // MARK: ImageHandler Conformance
+    
     /// The base directory for storing Twarrt images.
     var imageDir: String {
         return "images/twitarr/"
@@ -1514,6 +1517,9 @@ extension TwitarrController: ImageHandler {
 
 // twarrts can be bookmarked
 extension TwitarrController: UserBookmarkable {
+    
+    // MARK: UserBookmarkable Conformance
+    
     /// The barrel type for `Twarrt` bookmarking.
     var bookmarkBarrelType: BarrelType {
         return .bookmarkedTwarrt

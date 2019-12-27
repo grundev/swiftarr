@@ -1367,6 +1367,9 @@ extension FezController: ContentFilterable {}
 
 // posts can contain images
 extension FezController: ImageHandler {
+    
+    // MARK: ImageHandler Conformance
+    
     /// The base directory for storing FezPost images.
     var imageDir: String {
         return "images/fez/"
