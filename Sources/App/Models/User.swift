@@ -44,6 +44,15 @@ final class User: Codable {
     /// or to the parent's access level if a sub-account.
     var accessLevel: UserAccessLevel
     
+    /// Whether the user prefers to have posted images watermarked by default.
+    var prefersWatermark: Bool
+    
+    /// Optional text to use for a default watermark.
+    var watermarkText: String?
+    
+    /// The gravity to use for a default watermark.
+    var watermarkGravity: WatermarkGravityType
+    
     /// Number of successive failed attempts at password recovery.
     var recoveryAttempts: Int
     
@@ -76,6 +85,9 @@ final class User: Codable {
     ///     address. `nil` if not yet verified.
     ///   - parentID: If a sub-account, the `id` of the master acount, otherwise `nil`.
     ///   - accessLevel: The user's access level (see `UserAccessLevel`).
+    ///   - prefersWatermark: Whether the user prefars images to be watermarked by default.
+    ///   - watermarkText: The text to use for a default watermark.
+    ///   - watermarkGravity: The gravity to use for a default watermark.
     ///   - recoveryAttempts: The number of successive failed attempts at password recovery,
     ///     initially 0.
     ///   - reports: The total number of reports made on the user's posts, initially 0.
@@ -89,6 +101,9 @@ final class User: Codable {
         verification: String? = nil,
         parentID: UUID? = nil,
         accessLevel: UserAccessLevel,
+        prefersWatermark: Bool = false,
+        watermarkText: String? = nil,
+        watermarkGravity: WatermarkGravityType = .southEestGravity,
         recoveryAttempts: Int = 0,
         reports: Int = 0,
         profileUpdatedAt: Date = Date(timeIntervalSince1970: 0)
@@ -99,6 +114,9 @@ final class User: Codable {
         self.verification = verification
         self.parentID = parentID
         self.accessLevel = accessLevel
+        self.prefersWatermark = prefersWatermark
+        self.watermarkText = watermarkText
+        self.watermarkGravity = watermarkGravity
         self.recoveryAttempts = recoveryAttempts
         self.reports = reports
         self.profileUpdatedAt = profileUpdatedAt
