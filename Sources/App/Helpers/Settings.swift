@@ -34,6 +34,15 @@ final class Settings {
         get { return settingsQueue.sync { _friendlyFezID } }
     }
     
+    var fotomatURLString: String {
+        set(newValue) {
+            settingsQueue.async {
+                self._fotomatURLString = newValue
+            }
+        }
+        get { return settingsQueue.sync { _fotomatURLString } }
+    }
+    
     // MARK: Limits
     
     /// The maximum number of twartts allowed per request.
@@ -79,7 +88,9 @@ final class Settings {
     }
     
     // MARK: - Internal Storage
-
+    
+    /// Internal storage.
+    fileprivate var _fotomatURLString: String = "http://localhost:8082/process"
     /// Internal storage.
     fileprivate var _blockedUserID: UUID = UUID()
     /// Internal storage.
