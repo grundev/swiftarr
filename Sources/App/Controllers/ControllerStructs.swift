@@ -145,6 +145,10 @@ struct CurrentUserData: Content {
     let username: String
     /// Whether the user is currently logged in.
     var isLoggedIn: Bool
+    /// The user's accessLevel
+    var accessLevel: UserAccessLevel
+    /// Whether the user prefers images to be watermarked by default.
+    var prefersWatermark: Bool
 }
 
 /// Used to obtain an event's details.
