@@ -525,7 +525,9 @@ struct UserController: RouteCollection {
             userID: me.requireID(),
             username: me.username,
             // if there's a BasicAuthorization header, not logged in
-            isLoggedIn: req.http.headers.basicAuthorization != nil ? false : true
+            isLoggedIn: req.http.headers.basicAuthorization != nil ? false : true,
+            accessLevel: me.accessLevel,
+            prefersWatermark: me.prefersWatermark
         )
         return req.future(currentUserData)
     }
