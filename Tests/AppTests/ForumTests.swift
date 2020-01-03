@@ -780,7 +780,7 @@ final class ForumTests: XCTestCase {
         let directoryConfig = DirectoryConfig.detect()
         let imagePath = directoryConfig.workDir.appending("seeds/").appending(imageFile)
         let data = FileManager.default.contents(atPath: imagePath)
-        let imageUploadData = ImageUploadData(filename: imageFile, image: data!)
+        let imageUploadData = ImageUploadData(filename: imageFile, image: data!, addWatermark: false)
         var postData = try app.getResult(
             from: forumURI + "post/\(post.postID)/image",
             method: .POST,

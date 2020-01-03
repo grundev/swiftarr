@@ -398,6 +398,8 @@ struct ImageUploadData: Content {
     var filename: String
     /// The image in `Data` format.
     var image: Data
+    /// Whether the image should be watermarked.
+    var addWatermark: Bool
 }
 
 /// Used to obtain the user's current list of keywords for muting public content.

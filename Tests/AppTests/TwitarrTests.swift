@@ -96,7 +96,7 @@ final class TwitarrTests: XCTestCase {
         let directoryConfig = DirectoryConfig.detect()
         let imagePath = directoryConfig.workDir.appending("seeds/").appending(imageFile)
         let data = FileManager.default.contents(atPath: imagePath)
-        let imageUploadData = ImageUploadData(filename: imageFile, image: data!)
+        let imageUploadData = ImageUploadData(filename: imageFile, image: data!, addWatermark: false)
         twarrtData = try app.getResult(
             from: twitarrURI + "\(twarrtData.twarrtID)/image",
             method: .POST,
