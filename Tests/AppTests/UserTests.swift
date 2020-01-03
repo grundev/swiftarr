@@ -770,7 +770,7 @@ final class UserTests: XCTestCase {
         let directoryConfig = DirectoryConfig.detect()
         var imagePath = directoryConfig.workDir.appending("seeds/").appending(imageFile)
         var data = FileManager.default.contents(atPath: imagePath)
-        var imageUploadData = ImageUploadData(filename: imageFile, image: data!)
+        var imageUploadData = ImageUploadData(filename: imageFile, image: data!, addWatermark: false)
         var uploadedImageData = try app.getResult(
             from: userURI + "image",
             method: .POST,
@@ -784,7 +784,7 @@ final class UserTests: XCTestCase {
         imageFile = "test-image.png"
         imagePath = directoryConfig.workDir.appending("seeds/").appending(imageFile)
         data = FileManager.default.contents(atPath: imagePath)
-        imageUploadData = ImageUploadData(filename: imageFile, image: data!)
+        imageUploadData = ImageUploadData(filename: imageFile, image: data!, addWatermark: false)
         uploadedImageData = try app.getResult(
             from: userURI + "image",
             method: .POST,
@@ -798,7 +798,7 @@ final class UserTests: XCTestCase {
         imageFile = "test-image.gif"
         imagePath = directoryConfig.workDir.appending("seeds/").appending(imageFile)
         data = FileManager.default.contents(atPath: imagePath)
-        imageUploadData = ImageUploadData(filename: imageFile, image: data!)
+        imageUploadData = ImageUploadData(filename: imageFile, image: data!, addWatermark: false)
         uploadedImageData = try app.getResult(
             from: userURI + "image",
             method: .POST,
