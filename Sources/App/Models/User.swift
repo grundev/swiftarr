@@ -103,7 +103,7 @@ final class User: Codable {
         accessLevel: UserAccessLevel,
         prefersWatermark: Bool = false,
         watermarkText: String? = nil,
-        watermarkGravity: WatermarkGravityType = .southEestGravity,
+        watermarkGravity: WatermarkGravityType = .southeastGravity,
         recoveryAttempts: Int = 0,
         reports: Int = 0,
         profileUpdatedAt: Date = Date(timeIntervalSince1970: 0)
