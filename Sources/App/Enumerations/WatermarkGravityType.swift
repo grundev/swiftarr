@@ -2,23 +2,23 @@ import FluentPostgreSQL
 
 /// The location within an image of where the watermark should be placed.
 
-enum WatermarkGravityType: String, PostgreSQLRawEnum {
+enum WatermarkGravityType: String, CaseIterable, PostgreSQLRawEnum {
     /// Upper left.
-    case northWestGravity
+    case northwestGravity = "northwestGravity"
     /// Upper middle.
-    case northGravity
+    case northGravity = "northGravity"
     /// Upper right.
-    case northEastGravity
+    case northeastGravity = "northeastGravity"
     /// Center left.
-    case westGravity
+    case westGravity = "westGravity"
     /// Center.
-    case centerGravity
+    case centerGravity = "centerGravity"
     /// Center right.
-    case eastGravity
+    case eastGravity = "eastGravity"
     /// Lower left.
-    case southWestGravity
+    case southwestGravity = "southwestGravity"
     /// Lower middle.
-    case southGravity
+    case southGravity = "southGravity"
     /// Lower right.
-    case southEestGravity
+    case southeastGravity = "southeastGravity"
 }
