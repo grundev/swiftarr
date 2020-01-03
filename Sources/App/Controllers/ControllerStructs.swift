@@ -904,6 +904,20 @@ struct UserVerifyData: Content {
     var verification: String
 }
 
+/// Used to set a `User`'s image watermarking preferences.
+///
+/// Required by: `POST /api/v3/user/watermark`
+///
+/// See `UserController.watermarkHandler(_:deat:)`.
+struct UserWatermarkData: Content {
+    /// Whether the user prefers watermarking by default.
+    var prefersWatermark: Bool
+    /// The text to use for a watermark.
+    var watermarkText: String?
+    /// The location to use for a watermark.
+    var watermarkGravity: String?
+}
+
 // MARK: - Validation
 
 extension BarrelCreateData: Validatable, Reflectable {
@@ -1033,6 +1047,33 @@ extension UserVerifyData: Validatable, Reflectable {
     static func validations() throws -> Validations<UserVerifyData> {
         var validations = Validations(UserVerifyData.self)
         try validations.add(\.verification, .count(6...7) && .characterSet(.alphanumerics + .whitespaces))
+        return validations
+    }
+}
+
+extension UserWatermarkData: Validatable, Reflectable {
+    /// Validates that `.watermarkText` contains a value if present, and that
+    /// `.watermarkGravity` is a known value if present.
+    static func validations() throws -> Validations<UserWatermarkData> {
+        var validations = Validations(UserWatermarkData.self)
+        validations.add("watermark text must contain value") {
+            (data) in
+            if data.watermarkText != nil {
+                guard let text = data.watermarkText, !text.isEmpty else {
+                    throw Abort(.badRequest, reason: "watermark text cannot be empty")
+                }
+            }
+        }
+        validations.add("watermark gravity is not a known value") {
+            (data) in
+            if data.watermarkGravity != nil {
+                let values = WatermarkGravityType.allCases.map { $0.rawValue }
+                guard let gravity = data.watermarkGravity,
+                    values.contains(gravity) else {
+                        throw Abort(.badRequest, reason: "not a known gravity value")
+                }
+            }
+        }
         return validations
     }
 }
