@@ -123,6 +123,7 @@ struct UserController: RouteCollection {
         sharedAuthGroup.post("image", "remove", use: imageRemoveHandler)
         sharedAuthGroup.get("profile", use: profileHandler)
         sharedAuthGroup.post(ProfileEditData.self, at: "profile", use: profileUpdateHandler)
+        sharedAuthGroup.get("watermark", "gravities", use: watermarkGravitiesHandler)
         sharedAuthGroup.get("whoami", use: whoamiHandler)
         
         // endpoints available only when logged in
@@ -148,6 +149,7 @@ struct UserController: RouteCollection {
         tokenAuthGroup.get("notes", use: notesHandler)
         tokenAuthGroup.post(UserPasswordData.self, at: "password", use: passwordHandler)
         tokenAuthGroup.post(UserUsernameData.self, at: "username", use: usernameHandler)
+        tokenAuthGroup.post(UserWatermarkData.self, at: "watermark", use: watermarkHandler)
     }
     
     // MARK: - Open Access Handlers
@@ -502,6 +504,17 @@ struct UserController: RouteCollection {
                     }
                 }
         }
+    }
+    
+    /// `GET /api/v3/user/watermark/gravities`
+    ///
+    /// Retrieve the list of valid values for `UserWatermarkData.watermarkGravity`
+    /// or `ImageUploadData.watermarkGravity`.
+    ///
+    /// - Parameter req: The incoming `Request`, provided automatically.
+    /// - Returns: `[String]` containing the valid gravity values.
+    func watermarkGravitiesHandler(_ req: Request) throws -> Future<[String]> {
+        return req.future(WatermarkGravityType.allCases.map { $0.rawValue })
     }
     
     /// `GET /api/v3/user/whoami`
@@ -1535,6 +1548,41 @@ struct UserController: RouteCollection {
                         }
                 }
         }
+    }
+        
+    /// `POST /api/v3/user/watermark`
+    ///
+    /// Set the user's watermark preferences.
+    ///
+    /// * `.prefersWatermark` - whether the user wants images watermarked by default
+    /// * `.watermarkText` - the text to use (default is "@username\nJoCo Cruise 2020")
+    /// * `.watermarkGravity` - the location within the image to place the watermark (default
+    ///   is "southeastGravity", bottom right)
+    ///
+    /// - Note: These preferences are on a *per-account* basis, to allow the ability for a user
+    ///   to have a dedicated sub-account for posting images they'd prefer to protect.
+    ///
+    /// The list of valid `.watermarkGravity` values is obtained from
+    /// `GET /api/v3/user/watermark/gravities`
+    ///
+    /// - Parameters:
+    ///   - req: The incoming `Request`, provided automatically.
+    ///   - data: `UserWatermarkData` containing the user's watermark settings.
+    /// - Returns: 201 Created on success.
+    func watermarkHandler(_ req: Request, data: UserWatermarkData) throws -> Future<HTTPStatus> {
+        let user = try req.requireAuthenticated(User.self)
+        // see UserWatermarkData.validations()
+        try data.validate()
+        user.prefersWatermark = data.prefersWatermark
+        user.watermarkText = data.watermarkText
+        // get gravity case
+        let gravityValues = WatermarkGravityType.allCases.map { $0.rawValue }
+        if let gravity = data.watermarkGravity,
+            gravityValues.contains(gravity),
+            let validGravity = WatermarkGravityType(rawValue: gravity) {
+                user.watermarkGravity = validGravity
+        }
+        return user.save(on: req).transform(to: .created)
     }
     
     // MARK: - Helper Functions

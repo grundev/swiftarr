@@ -816,4 +816,52 @@ final class UserTests: XCTestCase {
         )
         XCTAssertTrue(response.http.status.code == 204, "should be 204 No Content")
     }
+    
+    /// `GET /api/v3/user/watermark/gravities`
+    /// `POST /api/v3/user/watermark`
+    func testUserWatermark() throws {
+        // create logged in user
+        let token = try app.login(username: "verified", password: testPassword, on: conn)
+        var headers = HTTPHeaders()
+        headers.bearerAuthorization = BearerAuthorization(token: token.token)
+        
+        // get baseline
+        var whoami = try app.getResult(
+            from: userURI + "whoami",
+            method: .GET,
+            headers: headers,
+            decodeTo: CurrentUserData.self
+        )
+        XCTAssertFalse(whoami.prefersWatermark, "should be false")
+        
+        // test gravities
+        let gravities = try app.getResult(
+            from: userURI + "watermark/gravities",
+            method: .GET,
+            headers: headers,
+            decodeTo: [String].self
+        )
+        XCTAssertTrue(gravities.count == 9, "should be 9")
+        
+        // test watermark
+        let userWatermarkData = UserWatermarkData(
+            prefersWatermark: true,
+            watermarkText: "@grundoon\nWell hello there",
+            watermarkGravity: gravities[0]
+        )
+        let response = try app.getResponse(
+            from: userURI + "watermark",
+            method: .POST,
+            headers: headers,
+            body: userWatermarkData
+        )
+        XCTAssertTrue(response.http.status.code == 201, "should be 201 Created")
+        whoami = try app.getResult(
+            from: userURI + "whoami",
+            method: .GET,
+            headers: headers,
+            decodeTo: CurrentUserData.self
+        )
+        XCTAssertTrue(whoami.prefersWatermark, "should be true")
+    }
 }
